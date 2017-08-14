@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkTimeSync", "NetworkTimeSync\NetworkTimeSync.csproj", "{DA028B51-9678-45E7-821F-345176D3E71C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{800AAF2E-AD51-4A9F-AB92-74E1D238E2FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkTimeSync.UnitTests", "NetworkTimeSync.UnitTests\NetworkTimeSync.UnitTests.csproj", "{8D6DEA02-6FE1-4295-A8C7-266EE8ABCA77}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA028B51-9678-45E7-821F-345176D3E71C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA028B51-9678-45E7-821F-345176D3E71C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA028B51-9678-45E7-821F-345176D3E71C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA028B51-9678-45E7-821F-345176D3E71C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D6DEA02-6FE1-4295-A8C7-266EE8ABCA77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D6DEA02-6FE1-4295-A8C7-266EE8ABCA77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D6DEA02-6FE1-4295-A8C7-266EE8ABCA77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D6DEA02-6FE1-4295-A8C7-266EE8ABCA77}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8D6DEA02-6FE1-4295-A8C7-266EE8ABCA77} = {800AAF2E-AD51-4A9F-AB92-74E1D238E2FC}
+	EndGlobalSection
+EndGlobal
