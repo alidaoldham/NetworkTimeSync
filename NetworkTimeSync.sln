@@ -7,7 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkTimeSync", "NetworkT
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{800AAF2E-AD51-4A9F-AB92-74E1D238E2FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkTimeSync.UnitTests", "NetworkTimeSync.UnitTests\NetworkTimeSync.UnitTests.csproj", "{8D6DEA02-6FE1-4295-A8C7-266EE8ABCA77}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{4CF86C08-5408-4CFC-8D4B-3BEB994BCD7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkTimeSync.UnitTests", "Tests\UnitTests\NetworkTimeSync.UnitTests\NetworkTimeSync.UnitTests.csproj", "{8D6DEA02-6FE1-4295-A8C7-266EE8ABCA77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +30,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{8D6DEA02-6FE1-4295-A8C7-266EE8ABCA77} = {800AAF2E-AD51-4A9F-AB92-74E1D238E2FC}
+		{4CF86C08-5408-4CFC-8D4B-3BEB994BCD7E} = {800AAF2E-AD51-4A9F-AB92-74E1D238E2FC}
+		{8D6DEA02-6FE1-4295-A8C7-266EE8ABCA77} = {4CF86C08-5408-4CFC-8D4B-3BEB994BCD7E}
 	EndGlobalSection
 EndGlobal
