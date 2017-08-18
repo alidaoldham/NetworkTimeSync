@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeServices\NetworkTimeService\GetTimeForZoneTests.cs" />
     <Compile Include="UpdateTime\UpdateTimeInteractorTests.cs" />
+    <Compile Include="UpdateTime\UpdateTimeRunnerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -61,6 +61,7 @@
     <Compile Include="TimeServices\NetworkTimeService\TimeZoneDbResponse.cs" />
     <Compile Include="UpdateTime\UpdateTimeInteractor.cs" />
     <Compile Include="TimeServices\WindowsTimeService\WindowsTimeService.cs" />
+    <Compile Include="UpdateTime\UpdateTimeRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
