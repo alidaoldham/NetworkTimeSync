@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net.Http;
-using NetworkTimeSync.NetworkTimeService;
+using NetworkTimeSync.TimeServices.NetworkTimeService;
 
-namespace NetworkTimeSync.UnitTests.NetworkTimeService
+namespace NetworkTimeSync.UnitTests.TimeServices.NetworkTimeService
 {
     internal class TimeZoneDbServiceSub : TimeZoneDbService
     {

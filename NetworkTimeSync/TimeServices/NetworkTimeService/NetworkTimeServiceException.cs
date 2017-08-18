@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetworkTimeSync.NetworkTimeService
+namespace NetworkTimeSync.TimeServices.NetworkTimeService
 {
     public class NetworkTimeServiceException : Exception
     {

@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -41,8 +47,9 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NetworkTimeService\TimeZoneDbService.cs" />
-    <Compile Include="NetworkTimeService\NetworkTimeServiceException.cs" />
+    <Compile Include="TimeServices\NetworkTimeService\NetworkTimeService.cs" />
+    <Compile Include="TimeServices\NetworkTimeService\TimeZoneDbService.cs" />
+    <Compile Include="TimeServices\NetworkTimeService\NetworkTimeServiceException.cs" />
     <Compile Include="MainService.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -51,10 +58,16 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="NetworkTimeService\TimeZoneDbResponse.cs" />
+    <Compile Include="TimeServices\NetworkTimeService\TimeZoneDbResponse.cs" />
+    <Compile Include="UpdateTime\UpdateTimeInteractor.cs" />
+    <Compile Include="TimeServices\WindowsTimeService\WindowsTimeService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -2,11 +2,11 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using NetworkTimeSync.NetworkTimeService;
+using NetworkTimeSync.TimeServices.NetworkTimeService;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace NetworkTimeSync.UnitTests.NetworkTimeService
+namespace NetworkTimeSync.UnitTests.TimeServices.NetworkTimeService
 {
     [TestFixture]
     public class GetTimeForZoneTests
