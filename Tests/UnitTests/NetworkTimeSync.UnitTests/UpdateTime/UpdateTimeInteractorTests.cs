@@ -13,10 +13,12 @@ namespace NetworkTimeSync.UnitTests.UpdateTime
         private Mock<NetworkTimeService> mockNetworkTimeService;
         private Mock<WindowsTimeService> mockWindowsTimeService;
         private UpdateTimeInteractor interactor;
+        private Exception caughtException;
 
         [SetUp]
         public void Setup()
         {
+            caughtException = null;
             mockNetworkTimeService = new Mock<NetworkTimeService>();
             mockWindowsTimeService = new Mock<WindowsTimeService>();
             interactor = new UpdateTimeInteractor(mockNetworkTimeService.Object, mockWindowsTimeService.Object);
@@ -28,6 +30,15 @@ namespace NetworkTimeSync.UnitTests.UpdateTime
             GivenTheNetworkTimeServiceWillThrowAnException();
             WhenIUpdateTheTime();
             ThenTheWindowsTimeWasNeverUpdated();
+            ThenNoExceptionWasThrownByTheInteractor();
+        }
+
+        [Test]
+        public void WindowsTimeServiceExceptionIsHandledAndNotRethrown()
+        {
+            GivenTheWindowsTimeServiceWillThrownAnException();
+            WhenIUpdateTheTime();
+            ThenNoExceptionWasThrownByTheInteractor();
         }
 
         [Test]
@@ -45,6 +56,12 @@ namespace NetworkTimeSync.UnitTests.UpdateTime
                 .Throws(new NetworkTimeServiceException("ExceptionMessage"));
         }
 
+        private void GivenTheWindowsTimeServiceWillThrownAnException()
+        {
+            mockWindowsTimeService.Setup(m => m.SetWindowsTime(It.IsAny<DateTime>()))
+                .Throws(new WindowsTimeServiceException("ExceptionMessage"));
+        }
+
         private void GivenTheNetworkTimeServiceWillReturn(DateTime networkTime, string timeZone)
         {
             mockNetworkTimeService.Setup(m => m.GetTimeForZone(timeZone)).Returns(networkTime);
@@ -52,7 +69,14 @@ namespace NetworkTimeSync.UnitTests.UpdateTime
 
         private void WhenIUpdateTheTime()
         {
-            interactor.Execute();
+            try
+            {
+                interactor.Execute();
+            }
+            catch (Exception ex)
+            {
+                caughtException = ex;
+            }
         }
 
         private void ThenTheWindowsTimeWasNeverUpdated()
@@ -63,6 +87,11 @@ namespace NetworkTimeSync.UnitTests.UpdateTime
         private void ThenTheWindowsTimeWasUpdated(DateTime expectedDateTime)
         {
             mockWindowsTimeService.Verify(m => m.SetWindowsTime(expectedDateTime), Times.Once);
+        }
+
+        private void ThenNoExceptionWasThrownByTheInteractor()
+        {
+            Assert.IsNull(caughtException);
         }
     }
 }

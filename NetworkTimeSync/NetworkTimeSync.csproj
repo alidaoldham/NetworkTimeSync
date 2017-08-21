@@ -59,6 +59,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeServices\NetworkTimeService\TimeZoneDbResponse.cs" />
+    <Compile Include="TimeServices\WindowsTimeService\SYSTEMTIME.cs" />
+    <Compile Include="TimeServices\WindowsTimeService\Win32External.cs" />
+    <Compile Include="TimeServices\WindowsTimeService\Win32ExternalImpl.cs" />
+    <Compile Include="TimeServices\WindowsTimeService\WindowsTimeServiceException.cs" />
+    <Compile Include="TimeServices\WindowsTimeService\WindowsTimeServiceImpl.cs" />
     <Compile Include="UpdateTime\UpdateTimeInteractor.cs" />
     <Compile Include="TimeServices\WindowsTimeService\WindowsTimeService.cs" />
     <Compile Include="UpdateTime\UpdateTimeRunner.cs" />
