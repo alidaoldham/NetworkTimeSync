@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetworkTimeSync.TimeServices.NetworkTimeService
 {
-    public class TimeZoneDbService
+    public class TimeZoneDbService : NetworkTimeService
     {
         private const string GetTimeZoneUri = "http://api.timezonedb.com/v2/get-time-zone";
         private readonly string apiKey;
@@ -42,7 +42,7 @@ namespace NetworkTimeSync.TimeServices.NetworkTimeService
 
         protected virtual HttpResponseMessage GetAsync(HttpClient client, string parameters)
         {
-            return client.GetAsync("").Result;
+            return client.GetAsync(parameters).Result;
         }
 
         private static void ThrowExceptionIfResponseIsNotOkay(HttpStatusCode statusCode)
