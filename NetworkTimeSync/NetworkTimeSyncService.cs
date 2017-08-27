@@ -2,9 +2,9 @@
 
 namespace NetworkTimeSync
 {
-	public partial class MainService : ServiceBase
+	public partial class NetworkTimeSyncService : ServiceBase
 	{
-		public MainService()
+		public NetworkTimeSyncService()
 		{
 			InitializeComponent();
 		}

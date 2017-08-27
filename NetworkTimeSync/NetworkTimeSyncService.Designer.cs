@@ -1,6 +1,6 @@
 ﻿namespace NetworkTimeSync
 {
-	partial class MainService
+	partial class NetworkTimeSyncService
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -28,8 +28,11 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			components = new System.ComponentModel.Container();
-			this.ServiceName = "Service1";
+            // 
+            // NetworkTimeSyncService
+            // 
+            this.ServiceName = "Network Time Sync";
+
 		}
 
 		#endregion

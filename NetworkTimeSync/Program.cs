@@ -2,15 +2,15 @@
 
 namespace NetworkTimeSync
 {
-    internal static class Program
+    public static class Program
 	{
-		static void Main()
+		public static void Main()
 		{
 		    var servicesToRun = new ServiceBase[]
-		    {
-		        new MainService()
-		    };
-		    ServiceBase.Run(servicesToRun);
+            {
+                new NetworkTimeSyncService()
+            };
+             ServiceBase.Run(servicesToRun);
 		}
 	}
 }
