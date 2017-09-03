@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Moq;
 using NetworkTimeSync.NetworkTimeSync;
 using NetworkTimeSync.TimeServices.NetworkTimeService;
@@ -18,32 +19,34 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
 
             public new bool IsRunning => IsRunning();
 
-            public int NumberOfTimesUpdateTimeWasExecuted { get; private set; }
+            public int NumberOfTimesSyncToNetworkWasExecuted { get; private set; }
 
             protected override void SyncTimeToNetwork()
             {
-                waitingForUpdateIntervalToPass = false;
-                NumberOfTimesUpdateTimeWasExecuted++;
                 base.SyncTimeToNetwork();
+                waitingForUpdateIntervalToPass = false;
+                NumberOfTimesSyncToNetworkWasExecuted++;
             }
 
             private bool overrideWaitForUpdateIntervalToPass;
             private int numberOfTimesUpdateIntervalHasPassed;
             private bool waitingForUpdateIntervalToPass;
+            private int capturedIntervalInMilliseconds;
 
             public void GivenIOverrideWaitForUpdateIntervalToPass()
             {
                 overrideWaitForUpdateIntervalToPass = true;
             }
-
-            protected override void WaitForUpdateIntervalToPass(CancellationToken ct)
+            
+            protected override void WaitForUpdateIntervalToPass(CancellationToken ct, int intervalInMilliseconds)
             {
                 waitingForUpdateIntervalToPass = true;
+                capturedIntervalInMilliseconds = intervalInMilliseconds;
 
                 if (overrideWaitForUpdateIntervalToPass)
-                    SpinWait.SpinUntil(() => numberOfTimesUpdateIntervalHasPassed > NumberOfTimesUpdateTimeWasExecuted);
+                    SpinWait.SpinUntil(() => ct.IsCancellationRequested || numberOfTimesUpdateIntervalHasPassed > NumberOfTimesSyncToNetworkWasExecuted);
                 else
-                    base.WaitForUpdateIntervalToPass(ct);
+                    base.WaitForUpdateIntervalToPass(ct, intervalInMilliseconds);
             }
 
             public void WhenIAllowTheUpdateIntervalToPass()
@@ -53,18 +56,25 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
 
             public void WhenIWaitForTheTimeToBeUpdated(int numberOfTimes)
             {
-                SpinWait.SpinUntil(() => NumberOfTimesUpdateTimeWasExecuted == numberOfTimes);
+                SpinWait.SpinUntil(() => NumberOfTimesSyncToNetworkWasExecuted == numberOfTimes);
             }
 
             public void WhenIWaitForTheUpdaterToBeWaitingForTheIntervalToPass()
             {
                 SpinWait.SpinUntil(() => waitingForUpdateIntervalToPass);
             }
+
+            public int GetIntervalInMilliseconds()
+            {
+                return capturedIntervalInMilliseconds;
+            }
         }
 
         private Mock<NetworkTimeService> mockNetworkTimeService;
         private Mock<WindowsTimeService> mockWindowsTimeService;
         private NetworkTimeSyncRunnerSub runner;
+        private const int ShortIntervalInMilliseconds = 10 * 1000;
+        private const int LongIntervalInMilliseconds = 10 * 60 * 1000;
 
         [SetUp]
         public void Setup()
@@ -72,6 +82,12 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
             mockWindowsTimeService = new Mock<WindowsTimeService>();
             mockNetworkTimeService = new Mock<NetworkTimeService>();
             runner = new NetworkTimeSyncRunnerSub(mockNetworkTimeService.Object, mockWindowsTimeService.Object);
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            runner.Stop();
         }
 
         [Test]
@@ -87,15 +103,6 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
             runner.Start();
             WhenIWaitTheRunnerWillUpdateTheTime(1);
             WhenIWaitTheRunnerWillUpdateTheTime(2);
-        }
-
-        private void WhenIWaitTheRunnerWillUpdateTheTime(int numberOfTimes)
-        {
-            runner.WhenIAllowTheUpdateIntervalToPass();
-            runner.WhenIWaitForTheTimeToBeUpdated(numberOfTimes);
-            Assert.AreEqual(numberOfTimes, runner.NumberOfTimesUpdateTimeWasExecuted);
-            mockNetworkTimeService.Verify(m => m.GetTimeForZone(It.IsAny<string>()), Times.Exactly(numberOfTimes));
-            Assert.IsTrue(runner.IsRunning);
         }
 
         [Test]
@@ -120,7 +127,49 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
             runner.Start();
             runner.WhenIWaitForTheUpdaterToBeWaitingForTheIntervalToPass();
             runner.Stop();
-            Assert.AreEqual(1, runner.NumberOfTimesUpdateTimeWasExecuted);
+            Assert.AreEqual(1, runner.NumberOfTimesSyncToNetworkWasExecuted);
+        }
+
+        [Test]
+        public void TimeSyncFailsFirstTimeSoIntervalToWaitIsSmall()
+        {
+            GivenTheTimeSyncWithNetworkWillFail();
+            runner.Start();
+            runner.WhenIWaitForTheUpdaterToBeWaitingForTheIntervalToPass();
+            Assert.AreEqual(ShortIntervalInMilliseconds, runner.GetIntervalInMilliseconds());
+        }
+
+        [Test]
+        public void TimeSyncSucceedsSoIntervalTimeIsLong()
+        {
+            runner.Start();
+            runner.WhenIWaitForTheUpdaterToBeWaitingForTheIntervalToPass();
+            Assert.AreEqual(LongIntervalInMilliseconds, runner.GetIntervalInMilliseconds());
+        }
+
+        [Test]
+        public void IntervalToWaitWillChangeOnceTimeSyncSucceeds()
+        {
+            runner.GivenIOverrideWaitForUpdateIntervalToPass();
+            GivenTheTimeSyncWithNetworkWillFail();
+            runner.Start();
+            WhenIWaitTheRunnerWillUpdateTheTime(1);
+            Assert.AreEqual(ShortIntervalInMilliseconds, runner.GetIntervalInMilliseconds());
+            GivenTheTimeSyncWithNetworkWillSucceed();
+            WhenIWaitTheRunnerWillUpdateTheTime(2);
+            Assert.AreEqual(LongIntervalInMilliseconds, runner.GetIntervalInMilliseconds());
+        }
+
+        [Test]
+        public void IntervalToWaitWillChangeOnceTimeSyncFails()
+        {
+            runner.GivenIOverrideWaitForUpdateIntervalToPass();
+            runner.Start();
+            WhenIWaitTheRunnerWillUpdateTheTime(1);
+            Assert.AreEqual(LongIntervalInMilliseconds, runner.GetIntervalInMilliseconds());
+            GivenTheTimeSyncWithNetworkWillFail();
+            WhenIWaitTheRunnerWillUpdateTheTime(2);
+            Assert.AreEqual(ShortIntervalInMilliseconds, runner.GetIntervalInMilliseconds());
         }
 
         [Test]
@@ -133,6 +182,26 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
             runner.Start();
             runner.WhenIAllowTheUpdateIntervalToPass();
             WhenIWaitTheRunnerWillUpdateTheTime(3);
+        }
+
+        private void GivenTheTimeSyncWithNetworkWillFail()
+        {
+            mockNetworkTimeService.Setup(m => m.GetTimeForZone(It.IsAny<string>()))
+                .Throws(new NetworkTimeServiceException("ExceptionMessage"));
+        }
+
+        private void GivenTheTimeSyncWithNetworkWillSucceed()
+        {
+            mockNetworkTimeService.Setup(m => m.GetTimeForZone(It.IsAny<string>())).Returns(DateTime.Now);
+        }
+
+        private void WhenIWaitTheRunnerWillUpdateTheTime(int numberOfTimes)
+        {
+            runner.WhenIAllowTheUpdateIntervalToPass();
+            runner.WhenIWaitForTheTimeToBeUpdated(numberOfTimes);
+            Assert.AreEqual(numberOfTimes, runner.NumberOfTimesSyncToNetworkWasExecuted);
+            mockNetworkTimeService.Verify(m => m.GetTimeForZone(It.IsAny<string>()), Times.Exactly(numberOfTimes));
+            Assert.IsTrue(runner.IsRunning);
         }
     }
 }

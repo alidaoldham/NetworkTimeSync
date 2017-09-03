@@ -10,12 +10,11 @@ namespace NetworkTimeSync.NetworkTimeSync
         public NetworkTimeSyncRunner(NetworkTimeService networkTimeService, WindowsTimeService windowsTimeService) : base(
             networkTimeService, windowsTimeService)
         {
-            updateIntervalInMilliseconds = 10 * 60 * 1000;
         }
     
         private CancellationTokenSource cts;
         private Task updateTimeRunner;
-        private readonly int updateIntervalInMilliseconds;
+        private int updateIntervalInMilliseconds;
 
         public void Start()
         {
@@ -39,20 +38,23 @@ namespace NetworkTimeSync.NetworkTimeSync
             SyncTimeToNetwork();
             while (!ct.IsCancellationRequested)
             {
-                WaitForUpdateIntervalToPass(ct);
+                WaitForUpdateIntervalToPass(ct, updateIntervalInMilliseconds);
                 if (!ct.IsCancellationRequested)
                     SyncTimeToNetwork();
             }
         }
 
-        protected virtual void WaitForUpdateIntervalToPass(CancellationToken ct)
+        protected virtual void WaitForUpdateIntervalToPass(CancellationToken ct, int intervalInMilliseconds)
         {
-            SpinWait.SpinUntil(() => ct.IsCancellationRequested, updateIntervalInMilliseconds);
+            SpinWait.SpinUntil(() => ct.IsCancellationRequested, intervalInMilliseconds);
         }
 
         protected virtual void SyncTimeToNetwork()
         {
-            Execute();   
+            if (Execute())
+                updateIntervalInMilliseconds = 10 * 60 * 1000;
+            else
+                updateIntervalInMilliseconds = 10 * 1000;
         }
 
         public void Stop()

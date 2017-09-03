@@ -18,18 +18,25 @@ namespace NetworkTimeSync.NetworkTimeSync
             this.windowsTimeService = windowsTimeService;
         }
 
-        public void Execute()
+        public bool Execute()
         {
             try
             {
-                var timeZone = "America/Denver";
-                var dateTime = GetNetworkTime(timeZone);
-                SetWindowsTime(dateTime);
+                return SyncTimeToNetwork();
             }
             catch (Exception ex)
             {
                 Log.Error("Updated time has failed with exception:", ex);
+                return false;
             }
+        }
+
+        private bool SyncTimeToNetwork()
+        {
+            var timeZone = "America/Denver";
+            var dateTime = GetNetworkTime(timeZone);
+            SetWindowsTime(dateTime);
+            return true;
         }
 
         private DateTime GetNetworkTime(string timeZone)

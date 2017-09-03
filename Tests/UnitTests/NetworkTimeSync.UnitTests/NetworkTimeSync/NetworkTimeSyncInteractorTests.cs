@@ -14,10 +14,12 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
         private Mock<WindowsTimeService> mockWindowsTimeService;
         private NetworkTimeSyncInteractor interactor;
         private Exception caughtException;
+        private bool result;
 
         [SetUp]
         public void Setup()
         {
+            result = false;
             caughtException = null;
             mockNetworkTimeService = new Mock<NetworkTimeService>();
             mockWindowsTimeService = new Mock<WindowsTimeService>();
@@ -31,6 +33,7 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
             WhenIUpdateTheTime();
             ThenTheWindowsTimeWasNeverUpdated();
             ThenNoExceptionWasThrownByTheInteractor();
+            ThenTheResultWas(false);
         }
 
         [Test]
@@ -39,6 +42,7 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
             GivenTheWindowsTimeServiceWillThrownAnException();
             WhenIUpdateTheTime();
             ThenNoExceptionWasThrownByTheInteractor();
+            ThenTheResultWas(false);
         }
 
         [Test]
@@ -48,6 +52,7 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
             GivenTheNetworkTimeServiceWillReturn(networkTime, "America/Denver");
             WhenIUpdateTheTime();
             ThenTheWindowsTimeWasUpdated(networkTime);
+            ThenTheResultWas(true);
         }
 
         private void GivenTheNetworkTimeServiceWillThrowAnException()
@@ -71,7 +76,7 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
         {
             try
             {
-                interactor.Execute();
+                result = interactor.Execute();
             }
             catch (Exception ex)
             {
@@ -92,6 +97,11 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
         private void ThenNoExceptionWasThrownByTheInteractor()
         {
             Assert.IsNull(caughtException);
+        }
+
+        private void ThenTheResultWas(bool expectedResult)
+        {
+            Assert.AreEqual(expectedResult, result);
         }
     }
 }
