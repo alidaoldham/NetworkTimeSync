@@ -36,6 +36,7 @@ namespace NetworkTimeSync.NetworkTimeSync
 
         private void SyncTimeToNetwork(CancellationToken ct)
         {
+            SyncTimeToNetwork();
             while (!ct.IsCancellationRequested)
             {
                 WaitForUpdateIntervalToPass(ct);

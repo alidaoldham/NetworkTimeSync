@@ -112,7 +112,15 @@ namespace NetworkTimeSync.UnitTests.NetworkTimeSync
             runner.WhenIWaitForTheUpdaterToBeWaitingForTheIntervalToPass();
             runner.Stop();
             Assert.IsFalse(runner.IsRunning);
-            Assert.AreEqual(0, runner.NumberOfTimesUpdateTimeWasExecuted);
+        }
+
+        [Test]
+        public void TimeIsSyncedAfterStartingAndBeforeWaitingForTheIntervalToPass()
+        {
+            runner.Start();
+            runner.WhenIWaitForTheUpdaterToBeWaitingForTheIntervalToPass();
+            runner.Stop();
+            Assert.AreEqual(1, runner.NumberOfTimesUpdateTimeWasExecuted);
         }
 
         [Test]
