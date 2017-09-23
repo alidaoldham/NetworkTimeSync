@@ -1,18 +1,18 @@
 ﻿using System.Threading;
 using Moq;
+using NetworkTimeSync.NetworkTimeSync;
 using NetworkTimeSync.TimeServices.NetworkTimeService;
 using NetworkTimeSync.TimeServices.WindowsTimeService;
-using NetworkTimeSync.UpdateTime;
 using NUnit.Framework;
 
-namespace NetworkTimeSync.UnitTests.UpdateTime
+namespace NetworkTimeSync.UnitTests.NetworkTimeSync
 {
     [TestFixture]
-    public class UpdateTimeRunnerTests
+    public class NetworkTimeSyncRunnerTests
     {
-        internal class UpdateTimeRunnerSub : UpdateTimeRunner
+        internal class NetworkTimeSyncRunnerSub : NetworkTimeSyncRunner
         {
-            public UpdateTimeRunnerSub(NetworkTimeService networkTimeService, WindowsTimeService windowsTimeService) : base(networkTimeService, windowsTimeService)
+            public NetworkTimeSyncRunnerSub(NetworkTimeService networkTimeService, WindowsTimeService windowsTimeService) : base(networkTimeService, windowsTimeService)
             {
             }
 
@@ -20,11 +20,11 @@ namespace NetworkTimeSync.UnitTests.UpdateTime
 
             public int NumberOfTimesUpdateTimeWasExecuted { get; private set; }
 
-            protected override void UpdateTime()
+            protected override void SyncTimeToNetwork()
             {
                 waitingForUpdateIntervalToPass = false;
                 NumberOfTimesUpdateTimeWasExecuted++;
-                base.UpdateTime();
+                base.SyncTimeToNetwork();
             }
 
             private bool overrideWaitForUpdateIntervalToPass;
@@ -64,14 +64,14 @@ namespace NetworkTimeSync.UnitTests.UpdateTime
 
         private Mock<NetworkTimeService> mockNetworkTimeService;
         private Mock<WindowsTimeService> mockWindowsTimeService;
-        private UpdateTimeRunnerSub runner;
+        private NetworkTimeSyncRunnerSub runner;
 
         [SetUp]
         public void Setup()
         {
             mockWindowsTimeService = new Mock<WindowsTimeService>();
             mockNetworkTimeService = new Mock<NetworkTimeService>();
-            runner = new UpdateTimeRunnerSub(mockNetworkTimeService.Object, mockWindowsTimeService.Object);
+            runner = new NetworkTimeSyncRunnerSub(mockNetworkTimeService.Object, mockWindowsTimeService.Object);
         }
 
         [Test]

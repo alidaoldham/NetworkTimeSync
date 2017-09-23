@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using NetworkTimeSync.TimeServices.NetworkTimeService;
 using NetworkTimeSync.TimeServices.WindowsTimeService;
 
-namespace NetworkTimeSync.UpdateTime
+namespace NetworkTimeSync.NetworkTimeSync
 {
-    public class UpdateTimeRunner : UpdateTimeInteractor
+    public class NetworkTimeSyncRunner : NetworkTimeSyncInteractor
     {
-        public UpdateTimeRunner(NetworkTimeService networkTimeService, WindowsTimeService windowsTimeService) : base(
+        public NetworkTimeSyncRunner(NetworkTimeService networkTimeService, WindowsTimeService windowsTimeService) : base(
             networkTimeService, windowsTimeService)
         {
             updateIntervalInMilliseconds = 10 * 60 * 1000;
@@ -22,7 +22,7 @@ namespace NetworkTimeSync.UpdateTime
             if (!IsRunning())
             {
                 cts = new CancellationTokenSource();
-                updateTimeRunner = new Task(() => UpdateTime(cts.Token), TaskCreationOptions.LongRunning);
+                updateTimeRunner = new Task(() => SyncTimeToNetwork(cts.Token), TaskCreationOptions.LongRunning);
                 updateTimeRunner.Start();
             }
         }
@@ -34,13 +34,13 @@ namespace NetworkTimeSync.UpdateTime
                    !updateTimeRunner.IsCompleted;
         }
 
-        private void UpdateTime(CancellationToken ct)
+        private void SyncTimeToNetwork(CancellationToken ct)
         {
             while (!ct.IsCancellationRequested)
             {
                 WaitForUpdateIntervalToPass(ct);
                 if (!ct.IsCancellationRequested)
-                    UpdateTime();
+                    SyncTimeToNetwork();
             }
         }
 
@@ -49,7 +49,7 @@ namespace NetworkTimeSync.UpdateTime
             SpinWait.SpinUntil(() => ct.IsCancellationRequested, updateIntervalInMilliseconds);
         }
 
-        protected virtual void UpdateTime()
+        protected virtual void SyncTimeToNetwork()
         {
             Execute();   
         }

@@ -1,18 +1,18 @@
 ﻿using System;
 using Moq;
+using NetworkTimeSync.NetworkTimeSync;
 using NetworkTimeSync.TimeServices.NetworkTimeService;
 using NetworkTimeSync.TimeServices.WindowsTimeService;
-using NetworkTimeSync.UpdateTime;
 using NUnit.Framework;
 
-namespace NetworkTimeSync.UnitTests.UpdateTime
+namespace NetworkTimeSync.UnitTests.NetworkTimeSync
 {
     [TestFixture]
-    public class UpdateTimeInteractorTests
+    public class NetworkTimeSyncInteractorTests
     {
         private Mock<NetworkTimeService> mockNetworkTimeService;
         private Mock<WindowsTimeService> mockWindowsTimeService;
-        private UpdateTimeInteractor interactor;
+        private NetworkTimeSyncInteractor interactor;
         private Exception caughtException;
 
         [SetUp]
@@ -21,7 +21,7 @@ namespace NetworkTimeSync.UnitTests.UpdateTime
             caughtException = null;
             mockNetworkTimeService = new Mock<NetworkTimeService>();
             mockWindowsTimeService = new Mock<WindowsTimeService>();
-            interactor = new UpdateTimeInteractor(mockNetworkTimeService.Object, mockWindowsTimeService.Object);
+            interactor = new NetworkTimeSyncInteractor(mockNetworkTimeService.Object, mockWindowsTimeService.Object);
         }
         
         [Test]

@@ -59,8 +59,8 @@
     <Compile Include="TimeServices\NetworkTimeService\GetTimeForZoneTests.cs" />
     <Compile Include="TimeServices\WindowsTimeService\MockWin32External.cs" />
     <Compile Include="TimeServices\WindowsTimeService\WindowsTimeServiceTests.cs" />
-    <Compile Include="UpdateTime\UpdateTimeInteractorTests.cs" />
-    <Compile Include="UpdateTime\UpdateTimeRunnerTests.cs" />
+    <Compile Include="NetworkTimeSync\NetworkTimeSyncInteractorTests.cs" />
+    <Compile Include="NetworkTimeSync\NetworkTimeSyncRunnerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

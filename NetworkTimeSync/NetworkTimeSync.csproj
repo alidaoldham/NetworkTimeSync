@@ -80,9 +80,9 @@
     <Compile Include="TimeServices\WindowsTimeService\Win32ExternalImpl.cs" />
     <Compile Include="TimeServices\WindowsTimeService\WindowsTimeServiceException.cs" />
     <Compile Include="TimeServices\WindowsTimeService\WindowsTimeServiceImpl.cs" />
-    <Compile Include="UpdateTime\UpdateTimeInteractor.cs" />
+    <Compile Include="NetworkTimeSync\NetworkTimeSyncInteractor.cs" />
     <Compile Include="TimeServices\WindowsTimeService\WindowsTimeService.cs" />
-    <Compile Include="UpdateTime\UpdateTimeRunner.cs" />
+    <Compile Include="NetworkTimeSync\NetworkTimeSyncRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

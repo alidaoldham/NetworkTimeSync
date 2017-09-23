@@ -3,16 +3,16 @@ using Common.Logging;
 using NetworkTimeSync.TimeServices.NetworkTimeService;
 using NetworkTimeSync.TimeServices.WindowsTimeService;
 
-namespace NetworkTimeSync.UpdateTime
+namespace NetworkTimeSync.NetworkTimeSync
 {
-    public class UpdateTimeInteractor
+    public class NetworkTimeSyncInteractor
     {
-        private static readonly ILog Log = LogManager.GetLogger<UpdateTimeInteractor>();
+        private static readonly ILog Log = LogManager.GetLogger<NetworkTimeSyncInteractor>();
 
         private readonly NetworkTimeService networkTimeService;
         private readonly WindowsTimeService windowsTimeService;
 
-        public UpdateTimeInteractor(NetworkTimeService networkTimeService, WindowsTimeService windowsTimeService)
+        public NetworkTimeSyncInteractor(NetworkTimeService networkTimeService, WindowsTimeService windowsTimeService)
         {
             this.networkTimeService = networkTimeService;
             this.windowsTimeService = windowsTimeService;
